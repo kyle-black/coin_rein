@@ -56,6 +56,10 @@ def main(args):
             state = next_state
             total_reward += reward
 
+            print('reward:', reward)
+            print('total_reward:',total_reward)
+            
+
         # Update the best score
         if total_reward > best_score:
             best_score = total_reward
@@ -63,10 +67,11 @@ def main(args):
         print(f"Episode {episode + 1}/{args.episodes} - Total Reward: {total_reward:.2f}")
 
     # Save model
-    model_dir = args.model_dir
-    os.makedirs(model_dir, exist_ok=True)
-    model_path = os.path.join(model_dir, 'model.h5')
-    agent.model.save(model_path)
+    #model_dir = args.model_dir
+
+    #os.makedirs(model_dir, exist_ok=True)
+    #model_path = os.path.join(model_dir, 'model.h5')
+    agent.model.save('model.h5')
     print(f"Model saved to {model_path}")
 
     # Output the best score
