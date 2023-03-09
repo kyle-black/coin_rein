@@ -1,0 +1,12 @@
+GAMMA = scalar value between 0 and 1  that represents the degree to which future rewards are considered in the desciion making process. ) is immediate and 1 is all future rewards are considered equally. 
+
+EPSILON = In reinforcement learning, epsilon (ε) is a hyperparameter used in the exploration-exploitation tradeoff. The exploration-exploitation tradeoff is a fundamental problem in reinforcement learning, where an agent has to decide between taking a known action (exploitation) or exploring new actions to potentially obtain a higher reward (exploration).
+
+Epsilon is the probability of the agent taking a random action instead of the action suggested by the current policy (exploitation). Initially, the value of epsilon is set to a high value, which encourages the agent to explore different actions and learn about the environment. As the agent gains experience, the value of epsilon is reduced over time to favor exploitation over exploration.
+
+The decay rate of epsilon is another hyperparameter that determines how quickly the agent shifts from exploration to exploitation. If the decay rate is low, the agent will continue to explore for longer, while a higher decay rate will cause the agent to focus on exploitation sooner. The choice of epsilon and its decay rate can have a significant impact on the performance of the learning algorithm.
+
+
+
+
+
