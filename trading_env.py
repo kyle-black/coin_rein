@@ -11,7 +11,7 @@ class TradingEnv(gym.Env):
         self.max_step = len(self.data) - 1
         self.action_space = spaces.Discrete(2)
         #self.observation_space = spaces.Box(low=0, high=1, shape=(self.num_features * self.window_size,))
-        self.observation_space = spaces.Box(low=-np.inf, high=np.inf, shape=(120,))
+        self.observation_space = spaces.Box(low=0, high=np.inf, shape=(120,))
         print(f"Observation space: {self.observation_space}")
     def _get_observation(self):
         observation = self.data[self.current_step - self.window_size : self.current_step]

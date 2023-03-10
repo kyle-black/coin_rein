@@ -58,7 +58,7 @@ class TradingAgent:
         new_targets = self.model.predict(states)
         for i in range(self.batch_size):
             if dones[i]:
-                new_targets[i, actions[i]] = rewards[i]
+                new_targets[i, actions[i]] = rewards[i].reshape((1,))
                 print(new_targets)
             else:
                 next_q_values = self.model.predict(next_states[i].reshape(1, -1))

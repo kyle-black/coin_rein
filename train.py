@@ -44,6 +44,8 @@ def main(args):
 
     # Train agent
     best_score = -np.inf
+    early_stop_patience = 3
+    no_improvement_count = 0
     for episode in range(args.episodes):
         state = env.reset()
         total_reward = 0
@@ -55,34 +57,38 @@ def main(args):
             agent.replay()
             state = next_state
             total_reward += reward
-
+            
             print('reward:', reward)
-            print('total_reward:',total_reward)
+            print('episode:', episode)
+            print('total reward:', total_reward)
             
 
-        # Update the best score
-        if total_reward > best_score:
-            best_score = total_reward
+    # Update the best score and check for early stopping
+        if np.max(total_reward) > best_score:
+            best_score = np.max(total_reward)
+            no_improvement_count = 0
+            agent.model.save('best_model.h5')
+            print(f"Episode {episode + 1}/{args.episodes} - New Best Score: {best_score:.2f}")
+        else:
+            no_improvement_count += 1
+            print(f"Episode {episode + 1}/{args.episodes} - Total Reward: {total_reward:.2f}")
+        if no_improvement_count >= early_stop_patience:
+            print(f"No improvement for {early_stop_patience} episodes. Stopping training.")
+            break
 
-        print(f"Episode {episode + 1}/{args.episodes} - Total Reward: {total_reward:.2f}")
-
-    # Save model
-    #model_dir = args.model_dir
-
-    #os.makedirs(model_dir, exist_ok=True)
-    #model_path = os.path.join(model_dir, 'model.h5')
-    agent.model.save('model.h5')
-    print(f"Model saved to {model_path}")
-
-    # Output the best score
-    print(f"Best Score: {best_score:.2f}")
+    # Load the best model and save it as the final model
+    best_model_path = 'best_model.h5'
+    final_model_path = 'final_model.h5'
+    best_model = tf.keras.models.load_model(best_model_path)
+    best_model.save(final_model_path)
+    print(f"Final model saved to {final_model_path}")
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--window_size', type=int, default=30,
                         help='Size of the window used for each observation')
-    parser.add_argument('--episodes', type=int, default=100,
+    parser.add_argument('--episodes', type=int, default=10,
                         help='Number of training episodes to run')
     parser.add_argument('--gamma', type=float, default=0.95,
                         help='Discount factor for future rewards')
