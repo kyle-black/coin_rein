@@ -34,9 +34,9 @@ class TradingEnv(gym.Env):
         previous_price = self.data[self.current_step - 1]
 
 
-        current_price = self.data[self.current_step]
+        #current_price = self.data[self.current_step]
         if self.current_step +1 >=len(self.data):
-            current_price = current_price
+            current_price = self.data[self.current_step]
         
         else:
             current_price =self.data[self.current_step +1]        
