@@ -50,7 +50,7 @@ class TradingAgent:
         minibatch = np.array(random.sample(self.memory, self.batch_size), dtype=object)
         states = np.stack(minibatch[:, 0]).reshape((self.batch_size, self.state_size))
         actions = minibatch[:, 1].astype(int)
-        rewards = minibatch[:, 2]
+        rewards = np.array(minibatch[:, 2])
         next_states = np.stack(minibatch[:, 3]).reshape((self.batch_size, self.state_size))
         dones = minibatch[:, 4].astype(bool)
 
