@@ -54,6 +54,12 @@ class TradingAgent:
         next_states = np.stack(minibatch[:, 3]).reshape((self.batch_size, self.state_size))
         dones = minibatch[:, 4].astype(bool)
 
+
+        # Debugging print statements
+        print(f"rewards shape before: {rewards.shape}")
+        rewards = rewards.reshape(-1)
+        print(f"rewards shape after: {rewards.shape}")
+
     # Compute new targets
         new_targets = self.model.predict(states)
         for i in range(self.batch_size):
