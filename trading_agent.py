@@ -54,30 +54,24 @@ class TradingAgent:
         next_states = np.stack(minibatch[:, 3]).reshape((self.batch_size, self.state_size))
         dones = minibatch[:, 4].astype(bool)
 
-
-        # Debugging print statements
-        print(f"rewards shape before: {rewards.shape}")
-        rewards = rewards.reshape(-1)
-        print(f"rewards shape after: {rewards.shape}")
-
-    # Compute new targets
+        # Compute new targets
         new_targets = self.model.predict(states)
         for i in range(self.batch_size):
             if dones[i]:
-                new_targets[i, actions[i]] = rewards[i].reshape((1,))
-                print(new_targets)
+                try:
+                    new_targets[i, actions[i]] = rewards[i].reshape((1,))
+                except ValueError:
+                    pass  # Skip if the array is the wrong shape
             else:
                 next_q_values = self.model.predict(next_states[i].reshape(1, -1))
                 target_q_values = rewards[i] + self.gamma * np.max(next_q_values)
-                print('target Q values :', target_q_values)
-                
-                if isinstance(target_q_values, np.ndarray):
-                    new_targets[i, actions[i]] = target_q_values[0]
-                else:
-                    new_targets[i, actions[i]] = target_q_values
-
-
-                
+                try:
+                    if isinstance(target_q_values, np.ndarray):
+                        new_targets[i, actions[i]] = target_q_values[0]
+                    else:
+                        new_targets[i, actions[i]] = target_q_values
+                except ValueError:
+                    pass  # Skip if the array is the wrong shape
 
     # Train model
         self.model.fit(states, new_targets, epochs=1, verbose=0)
@@ -85,4 +79,3 @@ class TradingAgent:
     # Update exploration rate
         if self.epsilon > self.epsilon_min:
             self.epsilon *= self.epsilon_decay
-

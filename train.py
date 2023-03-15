@@ -61,6 +61,11 @@ def main(args):
             print('reward:', reward)
             print('episode:', episode)
             print('total reward:', total_reward)
+
+            # Baseline model
+            baseline_action = 1  # Buy and hold
+            baseline_next_state, baseline_reward, _, _ = env.step(baseline_action)
+            baseline_reward += baseline_reward
             
 
     # Update the best score and check for early stopping
@@ -82,6 +87,10 @@ def main(args):
     best_model = tf.keras.models.load_model(best_model_path)
     best_model.save(final_model_path)
     print(f"Final model saved to {final_model_path}")
+
+
+    # Evaluate baseline model
+    print(f"Baseline Score: {baseline_reward:.2f}")
 
 
 if __name__ == '__main__':
