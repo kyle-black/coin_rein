@@ -29,15 +29,24 @@ class TradingEnv(gym.Env):
     def reset(self):
         self.current_step = self.window_size
         return self._get_observation()
-    '''
+    
     def _get_reward(self, action):
         previous_price = self.data[self.current_step - 1]
+
+
         current_price = self.data[self.current_step]
+        if self.current_step +1 >=len(self.data):
+            current_price = current_price
+        
+        else:
+            current_price =self.data[self.current_step +1]        
+        
         if action == 1:  # Buy
             reward = current_price - previous_price
         else:  # Hold or sell
             reward = 0
         return reward
+    
     '''
     def _get_reward(self, action):
         current_price = self.data[self.current_step]
@@ -50,4 +59,4 @@ class TradingEnv(gym.Env):
             return diff
         else:  # Hold
             return 0
-
+    '''
