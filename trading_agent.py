@@ -58,20 +58,25 @@ class TradingAgent:
         new_targets = self.model.predict(states)
         for i in range(self.batch_size):
             if dones[i]:
-                try:
-                    new_targets[i, actions[i]] = rewards[i].reshape((1,))
-                except ValueError:
-                    pass  # Skip if the array is the wrong shape
+                    try:
+                        if isinstance(rewards[i], np.ndarray):
+                            new_targets[i, actions[i]] = rewards[i].reshape((1,))
+                        else:
+                            new_targets[i, actions[i]] = rewards[i]
+                    except ValueError:
+                        pass  # Skip if the array is the wrong shape
             else:
                 next_q_values = self.model.predict(next_states[i].reshape(1, -1))
                 target_q_values = rewards[i] + self.gamma * np.max(next_q_values)
-                try:
-                    if isinstance(target_q_values, np.ndarray):
-                        new_targets[i, actions[i]] = target_q_values[0]
-                    else:
-                        new_targets[i, actions[i]] = target_q_values
-                except ValueError:
-                    pass  # Skip if the array is the wrong shape
+        try:
+            if isinstance(target_q_values, np.ndarray):
+                new_targets[i, actions[i]] = target_q_values[0]
+            else:
+                new_targets[i, actions[i]] = target_q_values
+        except ValueError:
+            pass  # Skip if the array is the wrong shape
+
+        
 
     # Train model
         self.model.fit(states, new_targets, epochs=1, verbose=0)

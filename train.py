@@ -10,11 +10,21 @@ import tensorflow as tf
 def main(args):
     # Load data
 
-    gpus = tf.config.list_physical_devices('GPU')
-    if gpus:
-        for gpu in gpus:
-            print(f"GPU found: {gpu}")
-    else: print('GPU Not found')
+   # gpus = tf.config.list_physical_devices('GPU')
+    #if gpus:
+     #   for gpu in gpus:
+      #      print(f"GPU found: {gpu}")
+    #else: print('GPU Not found')
+
+
+    if tf.test.gpu_device_name():
+        print('GPU found')
+    else:
+        print("No GPU found")
+    
+# Set GPU memory growth
+    #physical_devices = tf.config.list_physical_devices('GPU')
+    #tf.config.experimental.set_memory_growth(physical_devices[0], True)
 
 
     df = pd.read_csv('btc2.csv')
@@ -44,7 +54,7 @@ def main(args):
 
     # Train agent
     best_score = -np.inf
-    early_stop_patience = 3
+    early_stop_patience = 10
     no_improvement_count = 0
     for episode in range(args.episodes):
         state = env.reset()
@@ -73,10 +83,10 @@ def main(args):
             best_score = np.max(total_reward)
             no_improvement_count = 0
             agent.model.save('best_model.h5')
-            print(f"Episode {episode + 1}/{args.episodes} - New Best Score: {best_score:.2f}")
+            print(f"Episode {episode + 1}/{args.episodes} - New Best Score: {best_score}")
         else:
             no_improvement_count += 1
-            print(f"Episode {episode + 1}/{args.episodes} - Total Reward: {total_reward:.2f}")
+            print(f"Episode {episode + 1}/{args.episodes} - Total Reward: {total_reward}")
         if no_improvement_count >= early_stop_patience:
             print(f"No improvement for {early_stop_patience} episodes. Stopping training.")
             break
@@ -97,7 +107,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--window_size', type=int, default=30,
                         help='Size of the window used for each observation')
-    parser.add_argument('--episodes', type=int, default=10,
+    parser.add_argument('--episodes', type=int, default=100,
                         help='Number of training episodes to run')
     parser.add_argument('--gamma', type=float, default=0.95,
                         help='Discount factor for future rewards')
