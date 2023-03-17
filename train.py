@@ -54,7 +54,7 @@ def main(args):
 
     # Train agent
     best_score = -np.inf
-    early_stop_patience = 10
+    early_stop_patience = 100
     no_improvement_count = 0
     for episode in range(args.episodes):
         state = env.reset()
