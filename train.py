@@ -17,10 +17,23 @@ def main(args):
     #else: print('GPU Not found')
 
 
-    if tf.test.gpu_device_name():
-        print('GPU found')
+    #if tf.test.gpu_device_name():
+    #    print('GPU found')
+    #else:
+    #    print("No GPU found")
+
+    gpus = tf.config.experimental.list_physical_devices('GPU')
+    if gpus:
+        try:
+            # Restrict TensorFlow to only use the first GPU
+            tf.config.experimental.set_visible_devices(gpus[0], 'GPU')
+            # Allow TensorFlow to allocate only as much GPU memory as needed
+            tf.config.experimental.set_memory_growth(gpus[0], True)
+            print("Using GPU:", gpus[0])
+        except RuntimeError as e:
+            print(e)
     else:
-        print("No GPU found")
+        print("No GPU available.")
     
 # Set GPU memory growth
     #physical_devices = tf.config.list_physical_devices('GPU')
