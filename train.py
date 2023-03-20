@@ -120,7 +120,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--window_size', type=int, default=30,
                         help='Size of the window used for each observation')
-    parser.add_argument('--episodes', type=int, default=100,
+    parser.add_argument('--episodes', type=int, default=30,
                         help='Number of training episodes to run')
     parser.add_argument('--gamma', type=float, default=0.95,
                         help='Discount factor for future rewards')

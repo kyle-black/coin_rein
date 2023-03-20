@@ -8,7 +8,7 @@ from tensorflow.keras.optimizers import Adam
 import numpy as np
 
 class TradingAgent:
-    def __init__(self, state_size, action_size, model_params, observation_space, action_space):
+    def __init__(self, state_size, action_size, model_params, observation_space, action_space,memory_size=100000 ):
         
         self.state_size = state_size
         self.action_size = action_size
@@ -16,13 +16,17 @@ class TradingAgent:
         self.action_space = action_space
         self.model_params = model_params
         self.model = self._build_model(state_size, action_size, model_params)
-        self.memory = []
+        #self.memory = []
+        self.memory = deque(maxlen=memory_size)
         self.gamma = model_params.get('gamma', 0.95)
         self.epsilon = model_params.get('epsilon', 1.0)
         self.epsilon_min= model_params.get('epsilon_min', 0.01)
         self.epsilon_decay = model_params.get('epsilon_decay', 0.995)
         self.learning_rate = model_params.get('learning_rate', 0.001)
         self.batch_size = model_params.get('batch_size', 32)
+
+    def remember(self, state, action, reward, next_state, done):
+        self.memory.append((state, action, reward, next_state, done))
 
     def _build_model(self, state_size, action_size, model_params):
         model = Sequential()
